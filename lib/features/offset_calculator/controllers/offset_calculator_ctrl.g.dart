@@ -1,26 +1,30 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'theme_service.dart';
+part of 'offset_calculator_ctrl.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$themeServiceHash() => r'b66d2366d127c28b90284c48b0946dd91feae67a';
+String _$offsetCalculatorCtrlHash() =>
+    r'340b4064bc51708e77f38d516783453f7cc5667d';
 
-/// See also [ThemeService].
-@ProviderFor(ThemeService)
-final themeServiceProvider =
-    AutoDisposeNotifierProvider<ThemeService, ThemeState>.internal(
-      ThemeService.new,
-      name: r'themeServiceProvider',
+/// See also [OffsetCalculatorCtrl].
+@ProviderFor(OffsetCalculatorCtrl)
+final offsetCalculatorCtrlProvider =
+    AutoDisposeNotifierProvider<
+      OffsetCalculatorCtrl,
+      OffsetCalculatorState
+    >.internal(
+      OffsetCalculatorCtrl.new,
+      name: r'offsetCalculatorCtrlProvider',
       debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
           ? null
-          : _$themeServiceHash,
+          : _$offsetCalculatorCtrlHash,
       dependencies: null,
       allTransitiveDependencies: null,
     );
 
-typedef _$ThemeService = AutoDisposeNotifier<ThemeState>;
+typedef _$OffsetCalculatorCtrl = AutoDisposeNotifier<OffsetCalculatorState>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
