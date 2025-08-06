@@ -90,6 +90,59 @@ extension DoubleX on double {
 
     return whole == 0 ? fractionStr : '$whole $fractionStr';
   }
+
+  (String whole, String fraction) toMixedNumberSeparated({int maxDenominator = 64}) {
+    const epsilon = 1.0e-9;
+
+    // Get the whole number part
+    final int whole = truncate();
+
+    // Get the fractional part
+    final double fractionalPart = this - whole;
+
+    // If there's no significant fractional part, return the whole number
+    if (fractionalPart < epsilon) {
+      return (whole.toString(), '');
+    }
+
+    // If the fractional part is almost 1, round up to the next whole number
+    if (1 - fractionalPart < epsilon) {
+      return ((whole + 1).toString(), '');
+    }
+
+    // Find the best rational approximation for the fractional part
+    int bestN = 1;
+    int bestD = 1;
+    double minError = fractionalPart.abs();
+
+    for (int d = 2; d <= maxDenominator; d++) {
+      final int n = (fractionalPart * d).round();
+      if (n == 0) continue;
+
+      final double error = (fractionalPart - n / d).abs();
+
+      if (error < minError) {
+        minError = error;
+        bestN = n;
+        bestD = d;
+      }
+    }
+
+    // Simplify the fraction using the greatest common divisor (GCD)
+    int gcd(int a, int b) => b == 0 ? a : gcd(b, a % b);
+    final commonDivisor = gcd(bestN, bestD);
+    final numerator = bestN ~/ commonDivisor;
+    final denominator = bestD ~/ commonDivisor;
+
+    // If the simplified fraction is x/1, it means we rounded to a whole number
+    if (denominator == 1) {
+      return ((whole + numerator).toString(), '');
+    }
+
+    final fractionStr = '$numerator/$denominator';
+
+    return whole == 0 ? ('', fractionStr) : (whole.toString(), fractionStr);
+  }
 }
 
 extension StringX on String {
@@ -137,38 +190,40 @@ extension IterableWidgetX on Iterable<Widget> {
   }
 }
 
-extension ListX on List {
-  void replaceAt(int index, Object replacement) {
+extension ListX<T> on List<T> {
+  void replaceAt(int index, T replacement) {
     this[index] = replacement;
   }
 
-  void replaceWith(Object original, Object replacement) {
-    if (contains(original)) {
-      replaceAt(indexOf(original), replacement);
+  void replaceWith(T original, T replacement) {
+    final index = indexOf(original);
+    if (index != -1) {
+      this[index] = replacement;
     }
   }
 
-  void replaceWithOrAdd(Object original, Object replacement) {
-    if (contains(original)) {
-      replaceWith(original, replacement);
+  void replaceWithOrAdd(T original, T replacement) {
+    final index = indexOf(original);
+    if (index != -1) {
+      this[index] = replacement;
     } else {
       add(replacement);
     }
   }
 
-  void removeAll(Iterable values) {
+  /// Note: This is equivalent to the built-in `List.removeAll`.
+  void removeAll(Iterable<T> values) {
     for (final value in values) {
       remove(value);
     }
   }
 }
 
-extension SetX on Set {
-  void toggleValue(Object value) {
-    if (!contains(value)) {
-      add(value);
-    }
-    else {
+extension SetX<T> on Set<T> {
+  /// Adds the [value] if it's not in the set, or removes it if it is.
+  void toggleValue(T value) {
+    // `Set.add` returns `false` if the item was already in the set.
+    if (!add(value)) {
       remove(value);
     }
   }

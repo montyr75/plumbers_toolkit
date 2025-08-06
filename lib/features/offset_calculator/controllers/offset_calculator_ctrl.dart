@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../data/offset_calculator_data.dart' as data;
-import '../../../utils/utils.dart';
+import '../../app/repos/secure_storage/secure_storage_repo.dart';
 import 'offset_calculator_state.dart';
 
 part 'offset_calculator_ctrl.g.dart';
@@ -10,38 +12,49 @@ part 'offset_calculator_ctrl.g.dart';
 class OffsetCalculatorCtrl extends _$OffsetCalculatorCtrl {
   @override
   OffsetCalculatorState build() {
+    _init();
     return const OffsetCalculatorState();
+  }
+
+  Future<void> _init() async {
+    final json = await ref.read(secureStorageRepoProvider).read(StorageKey.offsetCalculatorState.toKey());
+
+    if (json != null) {
+      state = OffsetCalculatorState.fromJson(json).copyWith(offsetDistance: 0);
+    }
+  }
+
+  void _saveState() {
+    ref.read(secureStorageRepoProvider).write(key: StorageKey.offsetCalculatorState.toKey(), value: state.toJson());
   }
 
   void offsetDistanceChanged(double value) {
     state = state.copyWith(offsetDistance: value);
-    _calculate();
+    _saveState();
   }
 
   void pipeTypeChanged(data.PipeType value) {
     state = state.copyWith(pipeType: value);
-    _calculate();
+
+    _checkPipeSize();
+    _saveState();
   }
 
   void pipeSizeChanged(double value) {
     state = state.copyWith(pipeSize: value);
-    _calculate();
+    _saveState();
   }
 
   void offsetAngleChanged(double value) {
     state = state.copyWith(offsetAngle: value);
-    _calculate();
+    _checkPipeSize();
+    _saveState();
   }
 
-  void _calculate() {
-    final offsetAngleData = data.offsetAngleData[state.offsetAngle]!;
-
-    final diagonalLength = state.offsetDistance * offsetAngleData.multiplier;
-    final cutLength = diagonalLength - (offsetAngleData.fittingAllowance[state.pipeType]![state.pipeSize]! * 2);
-
-    state = state.copyWith(
-      diagonalLength: diagonalLength,
-      cutLength: cutLength.minOf(data.minCutLength[state.pipeType]![state.pipeSize]! * 2),
-    );
+  /// Not all pipe sizes are available in every configuration.
+  void _checkPipeSize() {
+    if (state.fittingAllowance == null) {
+      state = state.copyWith(pipeSize: 3.0);
+    }
   }
 }

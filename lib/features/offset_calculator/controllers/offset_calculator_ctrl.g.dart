@@ -7,7 +7,7 @@ part of 'offset_calculator_ctrl.dart';
 // **************************************************************************
 
 String _$offsetCalculatorCtrlHash() =>
-    r'340b4064bc51708e77f38d516783453f7cc5667d';
+    r'c62820f440afd7f143cef0a30a327ccfef200d57';
 
 /// See also [OffsetCalculatorCtrl].
 @ProviderFor(OffsetCalculatorCtrl)

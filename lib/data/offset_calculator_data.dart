@@ -115,14 +115,6 @@ final Map<double, double> fittingAllowance60ABS = Map.unmodifiable({
 
 // These tables are <pipeSize, minCutLength>
 final Map<double, double> minCutLengthPVC = Map.unmodifiable({
-  1.5: 0.687,
-  2.0: 0.75,
-  3.0: 1.5,
-  4.0: 1.75,
-  6.0: 3.0,
-});
-
-final Map<double, double> minCutLengthABS = Map.unmodifiable({
   1.25: 0.687,
   1.5: 0.687,
   2.0: 0.75,
@@ -134,4 +126,12 @@ final Map<double, double> minCutLengthABS = Map.unmodifiable({
   12.0: 6.0,
   14.0: 7.0,
   16.0: 8.0,
+});
+
+final Map<double, double> minCutLengthABS = Map.unmodifiable({
+  1.5: 0.687,
+  2.0: 0.75,
+  3.0: 1.5,
+  4.0: 1.75,
+  6.0: 3.0,
 });

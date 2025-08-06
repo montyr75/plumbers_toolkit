@@ -14,7 +14,7 @@ class OffsetCalculatorStateMapper
   static OffsetCalculatorStateMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = OffsetCalculatorStateMapper._());
-      PipeTypeMapper.ensureInitialized();
+      data.PipeTypeMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -25,21 +25,15 @@ class OffsetCalculatorStateMapper
   static double _$offsetDistance(OffsetCalculatorState v) => v.offsetDistance;
   static const Field<OffsetCalculatorState, double> _f$offsetDistance =
       Field('offsetDistance', _$offsetDistance, opt: true, def: 0);
-  static PipeType _$pipeType(OffsetCalculatorState v) => v.pipeType;
-  static const Field<OffsetCalculatorState, PipeType> _f$pipeType =
-      Field('pipeType', _$pipeType, opt: true, def: PipeType.pvc);
+  static data.PipeType _$pipeType(OffsetCalculatorState v) => v.pipeType;
+  static const Field<OffsetCalculatorState, data.PipeType> _f$pipeType =
+      Field('pipeType', _$pipeType, opt: true, def: data.PipeType.pvc);
   static double _$pipeSize(OffsetCalculatorState v) => v.pipeSize;
   static const Field<OffsetCalculatorState, double> _f$pipeSize =
-      Field('pipeSize', _$pipeSize, opt: true, def: 0);
+      Field('pipeSize', _$pipeSize, opt: true, def: 3.0);
   static double _$offsetAngle(OffsetCalculatorState v) => v.offsetAngle;
   static const Field<OffsetCalculatorState, double> _f$offsetAngle =
-      Field('offsetAngle', _$offsetAngle, opt: true, def: 0);
-  static double _$diagonalLength(OffsetCalculatorState v) => v.diagonalLength;
-  static const Field<OffsetCalculatorState, double> _f$diagonalLength =
-      Field('diagonalLength', _$diagonalLength, opt: true, def: 0);
-  static double _$cutLength(OffsetCalculatorState v) => v.cutLength;
-  static const Field<OffsetCalculatorState, double> _f$cutLength =
-      Field('cutLength', _$cutLength, opt: true, def: 0);
+      Field('offsetAngle', _$offsetAngle, opt: true, def: 45.0);
 
   @override
   final MappableFields<OffsetCalculatorState> fields = const {
@@ -47,8 +41,6 @@ class OffsetCalculatorStateMapper
     #pipeType: _f$pipeType,
     #pipeSize: _f$pipeSize,
     #offsetAngle: _f$offsetAngle,
-    #diagonalLength: _f$diagonalLength,
-    #cutLength: _f$cutLength,
   };
 
   static OffsetCalculatorState _instantiate(DecodingData data) {
@@ -56,9 +48,7 @@ class OffsetCalculatorStateMapper
         offsetDistance: data.dec(_f$offsetDistance),
         pipeType: data.dec(_f$pipeType),
         pipeSize: data.dec(_f$pipeSize),
-        offsetAngle: data.dec(_f$offsetAngle),
-        diagonalLength: data.dec(_f$diagonalLength),
-        cutLength: data.dec(_f$cutLength));
+        offsetAngle: data.dec(_f$offsetAngle));
   }
 
   @override
@@ -120,11 +110,9 @@ abstract class OffsetCalculatorStateCopyWith<
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   $R call(
       {double? offsetDistance,
-      PipeType? pipeType,
+      data.PipeType? pipeType,
       double? pipeSize,
-      double? offsetAngle,
-      double? diagonalLength,
-      double? cutLength});
+      double? offsetAngle});
   OffsetCalculatorStateCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -140,27 +128,21 @@ class _OffsetCalculatorStateCopyWithImpl<$R, $Out>
   @override
   $R call(
           {double? offsetDistance,
-          PipeType? pipeType,
+          data.PipeType? pipeType,
           double? pipeSize,
-          double? offsetAngle,
-          double? diagonalLength,
-          double? cutLength}) =>
+          double? offsetAngle}) =>
       $apply(FieldCopyWithData({
         if (offsetDistance != null) #offsetDistance: offsetDistance,
         if (pipeType != null) #pipeType: pipeType,
         if (pipeSize != null) #pipeSize: pipeSize,
-        if (offsetAngle != null) #offsetAngle: offsetAngle,
-        if (diagonalLength != null) #diagonalLength: diagonalLength,
-        if (cutLength != null) #cutLength: cutLength
+        if (offsetAngle != null) #offsetAngle: offsetAngle
       }));
   @override
   OffsetCalculatorState $make(CopyWithData data) => OffsetCalculatorState(
       offsetDistance: data.get(#offsetDistance, or: $value.offsetDistance),
       pipeType: data.get(#pipeType, or: $value.pipeType),
       pipeSize: data.get(#pipeSize, or: $value.pipeSize),
-      offsetAngle: data.get(#offsetAngle, or: $value.offsetAngle),
-      diagonalLength: data.get(#diagonalLength, or: $value.diagonalLength),
-      cutLength: data.get(#cutLength, or: $value.cutLength));
+      offsetAngle: data.get(#offsetAngle, or: $value.offsetAngle));
 
   @override
   OffsetCalculatorStateCopyWith<$R2, OffsetCalculatorState, $Out2>

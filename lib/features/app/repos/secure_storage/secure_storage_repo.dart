@@ -10,7 +10,7 @@ part 'secure_storage_repo.g.dart';
 enum StorageKey {
   sessionId,
   email,
-  savedGame;
+  offsetCalculatorState;
 
   String toKey() => ReCase(name).snakeCase;
 }
