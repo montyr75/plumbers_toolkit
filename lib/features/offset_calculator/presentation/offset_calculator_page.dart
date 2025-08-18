@@ -38,7 +38,9 @@ class _OffsetCalculatorPageState extends ConsumerState<OffsetCalculatorPage> {
     final state = ref.watch(offsetCalculatorCtrlProvider);
     final styles = context.textStyles;
 
-    final cutLength = state.cutLength.roundToNearestFraction(8).toMixedNumberSeparated();
+    final roundedCutLength = state.roundedCutLength;
+    final isValidCutLength = state.isValidCutLength(roundedCutLength);
+    final minCutLength = state.minCutLength;
 
     return Scaffold(
       appBar: AppBar(title: const Text("Offset Calculator")),
@@ -71,7 +73,7 @@ class _OffsetCalculatorPageState extends ConsumerState<OffsetCalculatorPage> {
                 ),
                 boxXXL,
                 DropdownButtonFormField<double>(
-                  value: state.pipeSize,
+                  initialValue: state.pipeSize,
                   decoration: const InputDecoration(
                     labelText: 'Pipe Size',
                     border: OutlineInputBorder(),
@@ -93,6 +95,7 @@ class _OffsetCalculatorPageState extends ConsumerState<OffsetCalculatorPage> {
                   autofocus: true,
                   controller: _textController,
                   focusNode: _focusNode,
+                  scrollPadding: const EdgeInsets.only(bottom: 150),
                   decoration: const InputDecoration(
                     labelText: 'Offset Distance',
                     suffixText: 'in.',
@@ -109,36 +112,62 @@ class _OffsetCalculatorPageState extends ConsumerState<OffsetCalculatorPage> {
                   },
                 ),
                 boxXXL,
-                if (state.cutLength > 0)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        'Cut Length',
-                        textAlign: TextAlign.center,
-                        style: styles.titleMedium,
-                      ),
-                      Text.rich(
-                        style: styles.displaySmall,
-                        textAlign: TextAlign.center,
-                        TextSpan(
-                          children: [
-                            TextSpan(text: cutLength.$1),
-                            if (cutLength.$1.isNotEmpty && cutLength.$2.isNotEmpty) const TextSpan(text: ' '),
-                            TextSpan(
-                              text: cutLength.$2,
-                              style: const TextStyle(fontFeatures: [FontFeature.fractions()]),
-                            ),
-                            const TextSpan(text: '"'),
-                          ],
-                        ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text(
+                      'Cut Length',
+                      textAlign: TextAlign.center,
+                      style: styles.titleMedium,
+                    ),
+                    DefaultTextStyle(
+                      style: styles.displaySmall.copyWith(color: isValidCutLength ? null : Colors.red),
+                      child: MixedNumberDisplay(number: roundedCutLength),
+                    ),
+                    if (!isValidCutLength) ...[
+                      boxS,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text("min: "),
+                          boxS,
+                          MixedNumberDisplay(number: minCutLength),
+                        ],
                       ),
                     ],
-                  ),
+                  ],
+                ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MixedNumberDisplay extends StatelessWidget {
+  final double number;
+
+  const MixedNumberDisplay({super.key, required this.number});
+
+  @override
+  Widget build(BuildContext context) {
+    final numberSep = number.toMixedNumberSeparated();
+
+    return Text.rich(
+      textAlign: TextAlign.center,
+      TextSpan(
+        children: [
+          TextSpan(text: numberSep.$1),
+          if (numberSep.$1.isNotEmpty && numberSep.$2.isNotEmpty) const TextSpan(text: ' '),
+          TextSpan(
+            text: numberSep.$2,
+            style: const TextStyle(fontFeatures: [FontFeature.fractions()]),
+          ),
+          const TextSpan(text: '"'),
+        ],
       ),
     );
   }

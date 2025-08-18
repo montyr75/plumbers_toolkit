@@ -20,23 +20,20 @@ class OffsetCalculatorState with OffsetCalculatorStateMappable {
     this.offsetAngle = 45.0,
   });
 
-  double get cutLength {
-    final offsetAngleData = data.offsetAngleData[offsetAngle]!;
+  double get cutLength => travel - ((fittingAllowance ?? 0) * 2);
 
-    final diagonalLength = offsetDistance * offsetAngleData.multiplier;
-    final fittingAllowance = offsetAngleData.fittingAllowance[pipeType]?[pipeSize];
+  double? get multiplier => data.offsetAngleData[offsetAngle]?.multiplier;
 
-    if (fittingAllowance == null) {
-      return 0;
-    }
-
-    final cutLength = diagonalLength - (fittingAllowance * 2);
-
-    return cutLength.minOf(data.minCutLength[pipeType]![pipeSize]! * 2);
-  }
+  // sometimes called diagonal length
+  double get travel => offsetDistance * (multiplier ?? 0);
 
   double? get fittingAllowance => data.offsetAngleData[offsetAngle]?.fittingAllowance[pipeType]?[pipeSize];
   bool get hasValidFittingAllowance => fittingAllowance != null;
+
+  double get roundedCutLength => cutLength.roundToNearestFraction(8);
+
+  double get minCutLength => (data.minCutLength[pipeType]?[pipeSize] ?? 0) * 2;
+  bool isValidCutLength([double? cutLength]) => (cutLength ?? this.cutLength) > minCutLength;
 
   static final fromMap = OffsetCalculatorStateMapper.fromMap;
   static final fromJson = OffsetCalculatorStateMapper.fromJson;
